@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QString>
+using namespace std;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -52,5 +54,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    void changeKeyboardTarget(int currectIndex, QString value);
 };
 #endif // MAINWINDOW_H

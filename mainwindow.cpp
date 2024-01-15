@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -15,10 +16,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::changeKeyboardTarget(int currectIndex, QString value){
+    switch(currectIndex){
+    case 2:
+        ui->withdrawnInput->insert(value);
+        break;
+    case 4:
+        ui->pin->insert(value);
+        break;
+    }
+}
 
 void MainWindow::on_pushButton_clicked()
 {
-    ui->pin->insert("1");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "1");
 }
 
 
@@ -30,6 +41,7 @@ void MainWindow::on_pushButton_12_clicked()
 
 void MainWindow::on_pushButton_13_clicked()
 {
+
     ui->pin->insert("3");
 }
 
@@ -37,6 +49,7 @@ void MainWindow::on_pushButton_13_clicked()
 void MainWindow::on_pushButton_14_clicked()
 {
     if(ui->pin->text() == "2137"){
+        ui->pin->clear();
         ui->stackedWidget->setCurrentIndex(0);
     }
 }
