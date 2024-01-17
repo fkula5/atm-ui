@@ -11,6 +11,7 @@ public:
     void bankStatement(User& user);
     void checkCardStatus();
     ATM(const map<int, int>& initialCapacity);
+    ATM();
     void showBankotes();
 private:
     map<int, int> banknoteCapacity;

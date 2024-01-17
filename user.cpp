@@ -1,5 +1,9 @@
 #include "user.h"
 
+User::User(){
+
+}
+
 User::User(int id, string accountNumber, double balance, double dailyLimit, double monthlyLimit, double dailyWithdrawn, double monthlyWithdrawn)
 {
     this->userID = id;

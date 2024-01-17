@@ -11,6 +11,7 @@ private:
     bool isLocked;
     string ownerAccountNumber;
 public:
+    Card();
     Card(string cardNumber, string pin, bool isLocked, string ownerAccountNumber);
     string getCardNumber() const;
     string getPin() const;

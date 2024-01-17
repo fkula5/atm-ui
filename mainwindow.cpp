@@ -6,8 +6,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    atm = new ATM({{100, 5}, {50, 10}, {20, 15}, {10, 20}});
+    user = nullptr;
+    card = nullptr;
     ui->setupUi(this);
-    int defaultIndex = 4;
+    int defaultIndex = 1;
     ui->stackedWidget->setCurrentIndex(defaultIndex);
 }
 
@@ -21,7 +24,7 @@ void MainWindow::changeKeyboardTarget(int currectIndex, QString value){
     case 2:
         ui->withdrawnInput->insert(value);
         break;
-    case 4:
+    case 5:
         ui->pin->insert(value);
         break;
     }
@@ -35,20 +38,21 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_12_clicked()
 {
-    ui->pin->insert("2");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "2");
 }
 
 
 void MainWindow::on_pushButton_13_clicked()
 {
 
-    ui->pin->insert("3");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "3");
 }
 
 
 void MainWindow::on_pushButton_14_clicked()
 {
     if(ui->pin->text() == "2137"){
+        this->user = new User(456, "XYZ7890", 500.0, 2000.0, 15000.0, 100.0, 1000.0);
         ui->pin->clear();
         ui->stackedWidget->setCurrentIndex(0);
     }
@@ -57,19 +61,19 @@ void MainWindow::on_pushButton_14_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    ui->pin->insert("4");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "4");
 }
 
 
 void MainWindow::on_pushButton_5_clicked()
 {
-    ui->pin->insert("5");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "5");
 }
 
 
 void MainWindow::on_pushButton_6_clicked()
 {
-    ui->pin->insert("6");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "6");
 }
 
 
@@ -81,32 +85,32 @@ void MainWindow::on_pushButton_7_clicked()
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    ui->pin->insert("7");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "7");
 }
 
 
 void MainWindow::on_pushButton_8_clicked()
 {
-    ui->pin->insert("8");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "8");
 }
 
 
 void MainWindow::on_pushButton_9_clicked()
 {
-    ui->pin->insert("9");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "9");
 }
 
 
 void MainWindow::on_pushButton_15_clicked()
 {
     //remove card, cancel transactions
-    ui->stackedWidget->setCurrentIndex(4);
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
 
 void MainWindow::on_pushButton_10_clicked()
 {
-    ui->pin->insert("0");
+    this->changeKeyboardTarget(ui->stackedWidget->currentIndex(), "0");
 }
 
 
@@ -130,6 +134,27 @@ void MainWindow::on_pushButton_24_clicked()
 {
     if(ui->stackedWidget->currentIndex()==1){
         ui->stackedWidget->setCurrentIndex(2);
+    }
+}
+
+
+void MainWindow::on_pushButton_23_clicked()
+{
+    if(ui->stackedWidget->currentIndex()==0){
+        ui->accountNumber->insert(QString::fromStdString(this->user->getAccountNumber()));
+        ui->balance->insert(QString::number(this->user->getBalance()));
+        ui->dailyLimit->insert(QString::number(this->user->getDailyLimit()));
+        ui->monthlyLimit->insert(QString::number(this->user->getMonthtlyLimit()));
+        ui->dailyWithdrawn->insert(QString::number(this->user->getDailyWithdrawn()));
+        ui->monthlyWithdrawn->insert(QString::number(this->user->getMonthlyWithdrawn()));
+    }
+}
+
+
+void MainWindow::on_pushButton_25_clicked()
+{
+    if(ui->stackedWidget->currentIndex()==1){
+        ui->stackedWidget->setCurrentIndex(5);
     }
 }
 

@@ -1,5 +1,9 @@
 #include "card.h"
 
+Card::Card(){
+
+}
+
 Card::Card(string cardNumber, string pin, bool isLocked, string ownerAccountNumber)
     : cardNumber(cardNumber), pin(pin), isLocked(isLocked), ownerAccountNumber(ownerAccountNumber) {}
 

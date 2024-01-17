@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 #include <QString>
+#include "atm.h"
+#include "card.h"
+#include "user.h"
+#include "atm.h"
+#include "card.h"
 using namespace std;
 
 QT_BEGIN_NAMESPACE
@@ -52,8 +57,15 @@ private slots:
 
     void on_pushButton_24_clicked();
 
+    void on_pushButton_23_clicked();
+
+    void on_pushButton_25_clicked();
+
 private:
     Ui::MainWindow *ui;
+    ATM *atm;
+    User *user;
+    Card *card;
     void changeKeyboardTarget(int currectIndex, QString value);
 };
 #endif // MAINWINDOW_H

@@ -2,6 +2,10 @@
 #include <iostream>
 #include <algorithm>
 
+ATM::ATM(){
+
+}
+
 ATM::ATM(const map<int, int>& initialCapacity) {
     this->banknoteCapacity = initialCapacity;
 }

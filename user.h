@@ -11,6 +11,7 @@ private:
     double balance, dailyLimit, monthlyLimit, dailyWithdrawn, monthlyWithdrawn;
 
 public:
+    User();
     User(int id, string accountNumber, double balance, double dailyLimit, double monthlyLimit, double dailyWithdrawn, double monthlyWithdrawn);
     int getUserID();
     string getAccountNumber();
