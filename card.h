@@ -10,6 +10,7 @@ private:
     string pin;
     bool isLocked;
     string ownerAccountNumber;
+
 public:
     Card();
     Card(string cardNumber, string pin, bool isLocked, string ownerAccountNumber);
@@ -19,6 +20,7 @@ public:
     string getOwnerAccountNumber() const;
     void setPin(std::string newPin);
     void setLockStatus(bool newStatus);
+    int incorrectPinAttemps = 0;
 };
 
 #endif // CARD_H
