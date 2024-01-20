@@ -5,8 +5,7 @@
 #include <QString>
 #include "atm.h"
 #include "card.h"
-#include "user.h"
-#include "atm.h"
+#include "User.h"
 #include "card.h"
 using namespace std;
 
@@ -23,6 +22,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    double valueToWithdrawn;
 
 private slots:
     void on_pushButton_clicked();
@@ -61,11 +61,20 @@ private slots:
 
     void on_pushButton_25_clicked();
 
+    void on_pushButton_17_clicked();
+
+    void on_pushButton_19_clicked();
+
+    void on_pushButton_21_clicked();
+
+    void on_pushButton_18_clicked();
+
 private:
     Ui::MainWindow *ui;
     ATM *atm;
     User *user;
     Card *card;
     void changeKeyboardTarget(int currectIndex, QString value);
+    void withdrawPipeLine(double withdrawnValue);
 };
 #endif // MAINWINDOW_H

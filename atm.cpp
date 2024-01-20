@@ -70,7 +70,6 @@ bool ATM::withdrawn(User& user, double amount)
 
     for (auto& pair : toWithdraw) {
         this->banknoteCapacity[pair.first] -= pair.second;
-        cout << pair.second << " banknote(s) of " << pair.first << endl;
     }
 
     double newUserBalance = user.getBalance() - amount;
@@ -94,10 +93,4 @@ void ATM::bankStatement(User& user)
     cout << "Monthly withdrawn: " << user.getMonthlyWithdrawn() << endl;
 
     this->showBankotes();
-}
-
-
-void ATM::checkCardStatus()
-{
-    // TODO: Add your implementation code here.
 }

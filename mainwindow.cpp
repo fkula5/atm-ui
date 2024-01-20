@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     int defaultIndex = 1;
     ui->stackedWidget->setCurrentIndex(defaultIndex);
+    ui->stackedWidget_2->setCurrentIndex(2);
 }
 
 MainWindow::~MainWindow()
@@ -29,6 +30,15 @@ void MainWindow::changeKeyboardTarget(int currectIndex, QString value){
         ui->pin->insert(value);
         break;
     }
+}
+
+void MainWindow::withdrawPipeLine(double withdrawnValue){
+    this->valueToWithdrawn = withdrawnValue;
+    this->atm->withdrawn(*this->user, this->valueToWithdrawn);
+    QMessageBox::information(this, "title", QString::number(this->user->getBalance()));
+    card=nullptr;
+    user=nullptr;
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -52,9 +62,35 @@ void MainWindow::on_pushButton_13_clicked()
 
 void MainWindow::on_pushButton_14_clicked()
 {
+    if(ui->stackedWidget->currentIndex()==3){
+        this->withdrawPipeLine(ui->withdrawnInput->text().toDouble());
+    }
+
+    if(ui->stackedWidget->currentIndex()==4){
+        map<int, int> insertBanknotes;
+        double amountToDepo=0;
+        insertBanknotes.insert({10, ui->amount10->text() != "" ?  ui->amount10->text().toDouble(): 0});
+        insertBanknotes.insert({20,ui->amount20->text() != "" ?  ui->amount20->text().toDouble(): 0});
+        insertBanknotes.insert({50, ui->amount50->text() != "" ?  ui->amount50->text().toDouble(): 0});
+        insertBanknotes.insert({100, ui->amount100->text() != "" ?  ui->amount100->text().toDouble(): 0});
+        insertBanknotes.insert({200, ui->amount200->text() != "" ?  ui->amount200->text().toDouble(): 0});
+        insertBanknotes.insert({500, ui->amount500->text() != "" ?  ui->amount500->text().toDouble(): 0});
+
+        for (const auto& pair : insertBanknotes) {
+            amountToDepo = amountToDepo + (pair.first * pair.second);
+        }
+
+        this->atm->deposit(*this->user, amountToDepo, insertBanknotes);
+        QMessageBox::information(this, "title", QString::number(this->user->getBalance()));
+        card=nullptr;
+        user=nullptr;
+        ui->stackedWidget->setCurrentIndex(1);
+    }
+
     if(this->card->getIsLocked()){
         QMessageBox::warning(this,"title", "Zablokowana");
     }
+
     if(ui->pin->text().toStdString() == card->getPin()){
         this->card->incorrectPinAttemps = 0;
         this->user = new User(456, "XYZ7890", 500.0, 2000.0, 15000.0, 100.0, 1000.0);
@@ -137,6 +173,7 @@ void MainWindow::on_pushButton_15_clicked()
     card=nullptr;
     user=nullptr;
     ui->stackedWidget->setCurrentIndex(1);
+    ui->stackedWidget_2->setCurrentIndex(2);
 }
 
 
@@ -150,6 +187,11 @@ void MainWindow::on_pushButton_22_clicked()
 {
     if(ui->stackedWidget->currentIndex()==0){
         ui->stackedWidget->setCurrentIndex(4);
+        return;
+    }
+
+    if(ui->stackedWidget->currentIndex()==2){
+        this->withdrawPipeLine(20.0);
     }
 }
 
@@ -158,6 +200,11 @@ void MainWindow::on_pushButton_20_clicked()
 {
     if(ui->stackedWidget->currentIndex()==0){
         ui->stackedWidget->setCurrentIndex(2);
+        return;
+    }
+
+    if(ui->stackedWidget->currentIndex()==2){
+        this->withdrawPipeLine(200.0);
     }
 }
 
@@ -179,6 +226,11 @@ void MainWindow::on_pushButton_23_clicked()
         ui->monthlyLimit->insert(QString::number(this->user->getMonthtlyLimit()));
         ui->dailyWithdrawn->insert(QString::number(this->user->getDailyWithdrawn()));
         ui->monthlyWithdrawn->insert(QString::number(this->user->getMonthlyWithdrawn()));
+        ui->stackedWidget_2->setCurrentIndex(0);
+    }
+
+    if(ui->stackedWidget->currentIndex()==2){
+        this->withdrawPipeLine(10.0);
     }
 }
 
@@ -207,6 +259,38 @@ void MainWindow::on_pushButton_25_clicked()
             file.close();
         }
         ui->stackedWidget->setCurrentIndex(5);
+        ui->stackedWidget_2->setCurrentIndex(2);
     }
 }
 
+
+void MainWindow::on_pushButton_17_clicked()
+{
+    if(ui->stackedWidget->currentIndex()==2){
+        this->withdrawPipeLine(500.0);
+    }
+}
+
+
+void MainWindow::on_pushButton_19_clicked()
+{
+    if(ui->stackedWidget->currentIndex()==2){
+        this->withdrawPipeLine(400.0);
+    }
+}
+
+
+void MainWindow::on_pushButton_21_clicked()
+{
+    if(ui->stackedWidget->currentIndex()==2){
+        this->withdrawPipeLine(100.0);
+    }
+}
+
+
+void MainWindow::on_pushButton_18_clicked()
+{
+    if(ui->stackedWidget->currentIndex()==2){
+        this->withdrawPipeLine(50.0);
+    }
+}
