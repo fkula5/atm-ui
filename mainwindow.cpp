@@ -38,6 +38,7 @@ void MainWindow::withdrawPipeLine(double withdrawnValue){
     QMessageBox::information(this, "title", QString::number(this->user->getBalance()));
     card=nullptr;
     user=nullptr;
+    ui->stackedWidget_2->setCurrentIndex(1);
     ui->stackedWidget->setCurrentIndex(1);
 }
 

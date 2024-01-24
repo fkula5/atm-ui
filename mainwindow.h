@@ -76,5 +76,6 @@ private:
     Card *card;
     void changeKeyboardTarget(int currectIndex, QString value);
     void withdrawPipeLine(double withdrawnValue);
+    void displayWithdrawnBanknotes()
 };
 #endif // MAINWINDOW_H
