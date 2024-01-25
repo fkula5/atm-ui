@@ -608,11 +608,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-<<<<<<< HEAD
-     <number>1</number>
-=======
      <number>0</number>
->>>>>>> c9926b484884876d2410998ac0ee2bb978ab4adf
     </property>
     <widget class="QWidget" name="page_6">
      <widget class="QWidget" name="gridLayoutWidget_3">
