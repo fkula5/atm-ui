@@ -7,7 +7,7 @@ class ATM
 {
 public:
     void deposit(User& user, double amount, map<int, int>& banknoteStock);
-    bool withdrawn(User& user, double amount);
+    map<int, int> withdrawn(User& user, double amount);
     void bankStatement(User& user);
     void checkCardStatus();
     ATM(const map<int, int>& initialCapacity);

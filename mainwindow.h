@@ -7,6 +7,7 @@
 #include "card.h"
 #include "User.h"
 #include "card.h"
+#include "db.h"
 using namespace std;
 
 QT_BEGIN_NAMESPACE
@@ -74,8 +75,9 @@ private:
     ATM *atm;
     User *user;
     Card *card;
+    Database *database;
     void changeKeyboardTarget(int currectIndex, QString value);
     void withdrawPipeLine(double withdrawnValue);
-    void displayWithdrawnBanknotes()
+    void displayWithdrawnBanknotes();
 };
 #endif // MAINWINDOW_H

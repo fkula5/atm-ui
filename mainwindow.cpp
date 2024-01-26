@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     atm = new ATM({{100, 5}, {50, 10}, {20, 15}, {10, 20}});
     user = nullptr;
     card = nullptr;
+    database = nullptr;
     ui->setupUi(this);
     int defaultIndex = 1;
     ui->stackedWidget->setCurrentIndex(defaultIndex);
@@ -34,8 +35,18 @@ void MainWindow::changeKeyboardTarget(int currectIndex, QString value){
 
 void MainWindow::withdrawPipeLine(double withdrawnValue){
     this->valueToWithdrawn = withdrawnValue;
-    this->atm->withdrawn(*this->user, this->valueToWithdrawn);
+    map<int,int> banknotes =  this->atm->withdrawn(*this->user, this->valueToWithdrawn);
     QMessageBox::information(this, "title", QString::number(this->user->getBalance()));
+    if(banknotes.empty()){
+        ui->stackedWidget->setCurrentIndex(1);
+        return;
+    }
+    ui->banknote10->insert(QString::number(banknotes[10]));
+    ui->banknote20->insert(QString::number(banknotes[20]));
+    ui->banknote50->insert(QString::number(banknotes[50]));
+    ui->banknote100->insert(QString::number(banknotes[100]));
+    ui->banknote200->insert(QString::number(banknotes[200]));
+    ui->banknote500->insert(QString::number(banknotes[500]));
     card=nullptr;
     user=nullptr;
     ui->stackedWidget_2->setCurrentIndex(1);
@@ -65,6 +76,7 @@ void MainWindow::on_pushButton_14_clicked()
 {
     if(ui->stackedWidget->currentIndex()==3){
         this->withdrawPipeLine(ui->withdrawnInput->text().toDouble());
+        return;
     }
 
     if(ui->stackedWidget->currentIndex()==4){
@@ -227,7 +239,10 @@ void MainWindow::on_pushButton_23_clicked()
         ui->monthlyLimit->insert(QString::number(this->user->getMonthtlyLimit()));
         ui->dailyWithdrawn->insert(QString::number(this->user->getDailyWithdrawn()));
         ui->monthlyWithdrawn->insert(QString::number(this->user->getMonthlyWithdrawn()));
+        card=nullptr;
+        user=nullptr;
         ui->stackedWidget_2->setCurrentIndex(0);
+        ui->stackedWidget->setCurrentIndex(1);
     }
 
     if(ui->stackedWidget->currentIndex()==2){

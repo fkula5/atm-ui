@@ -31,22 +31,24 @@ void ATM::deposit(User& user, double amount, map<int, int>& banknoteStock)
     user.setBalance(newUserBalance);
 }
 
-bool ATM::withdrawn(User& user, double amount)
+map<int, int> ATM::withdrawn(User& user, double amount)
 {
+    map<int, int> toWithdraw;
+
     if (amount <= 0) {
-        return false;
+        return toWithdraw;;
     }
 
     if (user.getMonthlyWithdrawn() > user.getMonthtlyLimit() || (user.getMonthlyWithdrawn() + amount) > user.getMonthtlyLimit()) {
-        return false;
+        return toWithdraw;
     }
 
     if (user.getDailyWithdrawn() > user.getDailyLimit() || (user.getDailyWithdrawn() + amount) > user.getDailyLimit()) {
-        return false;
+        return toWithdraw;
     }
 
     if (user.getBalance() - amount < 0) {
-        return false;
+        return toWithdraw;
     }
 
     vector<int> denominations;
@@ -55,8 +57,6 @@ bool ATM::withdrawn(User& user, double amount)
     }
 
     sort(denominations.rbegin(), denominations.rend());
-
-    map<int, int> toWithdraw;
 
     double amountToWitdraw = amount;
 
@@ -80,7 +80,7 @@ bool ATM::withdrawn(User& user, double amount)
     user.setDailyWithdrawn(newUserDailyWithdrawn);
     user.setMonthlyWithdrawn(newUserMonthlyWithdrawn);
 
-    return true;
+    return toWithdraw;
 }
 
 void ATM::bankStatement(User& user)
