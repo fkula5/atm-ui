@@ -98,6 +98,7 @@ void MainWindow::on_pushButton_14_clicked()
         card=nullptr;
         user=nullptr;
         ui->stackedWidget->setCurrentIndex(1);
+        return;
     }
 
     if(this->card->getIsLocked()){
@@ -253,10 +254,20 @@ void MainWindow::on_pushButton_23_clicked()
 
 void MainWindow::on_pushButton_25_clicked()
 {
+    ui->banknote10->clear();
+    ui->banknote20->clear();
+    ui->banknote50->clear();
+    ui->banknote100->clear();
+    ui->banknote200->clear();
+    ui->banknote500->clear();
+
     if(ui->stackedWidget->currentIndex()==1){
+
+        this->database = new Database("bank.db");
+
         QString dirPath = "C:/Users/f3kul/Desktop/Folderki/atm-ui/cards";
 
-        QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), dirPath, tr("Files (*.*)*"));
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), dirPaxth, tr("Files (*.*)*"));
 
         QFile file(fileName);
 
@@ -269,6 +280,17 @@ void MainWindow::on_pushButton_25_clicked()
                 data[i] = line;
                 i++;
             }
+            if(!this->database->open()){
+                qDebug() << "Error opening database:" << this->database->lastError();
+                return;
+            }
+
+            QSqlQuery query = this->database->query("SELECT * FROM users");
+            while (query.next()) {
+                QString columnValue = query.value(0).toString();
+                qDebug() << columnValue;
+            }
+
             bool isCardLocked;
             istringstream(data[2]) >> isCardLocked;
             this->card = new Card(data[0], data[1], isCardLocked, data[3]);
