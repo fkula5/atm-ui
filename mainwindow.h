@@ -70,6 +70,8 @@ private slots:
 
     void on_pushButton_18_clicked();
 
+    void on_pushButton_15_clicked(bool checked);
+
 private:
     Ui::MainWindow *ui;
     ATM *atm;

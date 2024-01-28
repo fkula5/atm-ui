@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    atm = new ATM({{200, 5},{100, 5}, {50, 10}, {20, 15}, {10, 0}});
+    atm = nullptr;
     user = nullptr;
     card = nullptr;
     database = nullptr;
@@ -41,12 +41,18 @@ void MainWindow::withdrawPipeLine(double withdrawnValue){
         ui->stackedWidget->setCurrentIndex(1);
         return;
     }
+
     ui->banknote10->insert(QString::number(banknotes[10]));
     ui->banknote20->insert(QString::number(banknotes[20]));
     ui->banknote50->insert(QString::number(banknotes[50]));
     ui->banknote100->insert(QString::number(banknotes[100]));
     ui->banknote200->insert(QString::number(banknotes[200]));
     ui->banknote500->insert(QString::number(banknotes[500]));
+
+    QMap<QString, QVariant> params = {{{":amount500", QString::number(banknotes[500])}, {":amount200", QString::number(banknotes[200])}, {":amount100", QString::number(banknotes[100])}, {":amount50", QString::number(banknotes[50])}, {":amount20", QString::number(banknotes[20])}, {":amount10", QString::number(banknotes[10])}}};
+
+    QSqlQuery query = this->database->executeQuery("UPDATE atm SET amount500 = amount500 - :amount500, amount200 = amount200 - :amount200, amount100 = amount100 - :amount100, amount50 = amount50 - :amount50, amount20 = amount20 - :amount20, amount10 = amount10 - :amount10 WHERE id = 1", params);
+
     card=nullptr;
     user=nullptr;
     ui->stackedWidget_2->setCurrentIndex(1);
@@ -93,6 +99,10 @@ void MainWindow::on_pushButton_14_clicked()
             amountToDepo = amountToDepo + (pair.first * pair.second);
         }
 
+        QMap<QString, QVariant> params = {{{":amount500", QString::number(insertBanknotes[500])}, {":amount200", QString::number(insertBanknotes[200])}, {":amount100", QString::number(insertBanknotes[100])}, {":amount50", QString::number(insertBanknotes[50])}, {":amount20", QString::number(insertBanknotes[20])}, {":amount10", QString::number(insertBanknotes[10])}}};
+
+        QSqlQuery query = this->database->executeQuery("UPDATE atm SET amount500 = amount500 + :amount500, amount200 = amount200 + :amount200, amount100 = amount100 + :amount100, amount50 = amount50 + :amount50, amount20 = amount20 + :amount20, amount10 = amount10 + :amount10 WHERE id = 1", params);
+
         this->atm->deposit(*this->user, amountToDepo, insertBanknotes);
         QMessageBox::information(this, "title", QString::number(this->user->getBalance()));
         card=nullptr;
@@ -114,6 +124,17 @@ void MainWindow::on_pushButton_14_clicked()
 
             this->card->incorrectPinAttemps = 0;
             this->user = new User(query.value(0).toInt(), query.value(1).toString().toStdString(), query.value(2).toDouble(), query.value(3).toDouble(), query.value(4).toDouble(), query.value(5).toDouble(), query.value(6).toDouble());
+
+            params.clear();
+
+            query = this->database->executeQuery("SELECT * FROM atm WHERE id=1", params);
+
+            if(!query.next()){
+                return;
+            }
+
+            this->atm = new ATM({{500, query.value(1).toInt()}, {200, query.value(2).toInt()}, {100, query.value(3).toInt()}, {50, query.value(4).toInt()}, {20, query.value(5).toInt()}, {10, query.value(6).toInt()}});
+
             ui->pin->clear();
             ui->stackedWidget->setCurrentIndex(0);
         }
@@ -192,8 +213,10 @@ void MainWindow::on_pushButton_9_clicked()
 
 void MainWindow::on_pushButton_15_clicked()
 {
-    card=nullptr;
-    user=nullptr;
+    this->card = nullptr;
+    this->user = nullptr;
+    this->database->close();
+    this->database = nullptr;
     ui->stackedWidget->setCurrentIndex(1);
     ui->stackedWidget_2->setCurrentIndex(2);
 }
