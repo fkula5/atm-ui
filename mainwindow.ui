@@ -149,7 +149,7 @@
         <string notr="true">border: 1px solid black</string>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>5</number>
        </property>
        <widget class="QWidget" name="page">
         <widget class="QLabel" name="label_2">
@@ -1015,7 +1015,7 @@
      <x>0</x>
      <y>0</y>
      <width>1496</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
   </widget>

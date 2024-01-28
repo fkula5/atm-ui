@@ -5,6 +5,8 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 #include <QString>
+#include <QVariant>
+#include <QMap>
 
 class Database {
 private:
@@ -16,7 +18,7 @@ public:
 
     bool open();
     void close();
-    QSqlQuery query(const QString& queryStr);
+    QSqlQuery executeQuery(const QString& queryStr, const QMap<QString, QVariant>& params);
     QString lastError();
 };
 

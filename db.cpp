@@ -1,4 +1,5 @@
 #include "db.h"
+#include <QDebug>
 
 Database::Database(const QString& path) {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -22,9 +23,20 @@ void Database::close() {
     }
 }
 
-QSqlQuery Database::query(const QString& queryStr) {
+QSqlQuery Database::executeQuery(const QString& queryStr, const QMap<QString, QVariant>& params) {
     QSqlQuery query;
-    query.exec(queryStr);
+    query.prepare(queryStr);
+
+    if(!params.isEmpty()){
+        for(auto i = params.constBegin(); i != params.constEnd(); ++i){
+            query.bindValue(i.key(), i.value());
+        }
+    }
+
+    if(!query.exec()){
+        qDebug() << "Error executing query:"<< query.lastError().text();
+    }
+
     return query;
 }
 
