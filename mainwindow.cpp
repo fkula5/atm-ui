@@ -36,7 +36,6 @@ void MainWindow::changeKeyboardTarget(int currectIndex, QString value){
 void MainWindow::withdrawPipeLine(double withdrawnValue){
     this->valueToWithdrawn = withdrawnValue;
     map<int,int> banknotes =  this->atm->withdrawn(*this->user, this->valueToWithdrawn);
-    QMessageBox::information(this, "title", QString::number(this->user->getBalance()));
     if(banknotes.empty()){
         ui->stackedWidget->setCurrentIndex(1);
         QMessageBox::warning(this, "title", "Nie można wybrać zadanej kwoty");
@@ -58,9 +57,10 @@ void MainWindow::withdrawPipeLine(double withdrawnValue){
 
     this->database->executeQuery("UPDATE users SET balance = balance - :withdrawnValue WHERE id = :userId", params);
 
-    this->card = nullptr;
-    this->user = nullptr;
-    this->database = nullptr;
+    this->card=nullptr;
+    this->user=nullptr;
+    this->database->close();
+    this->database=nullptr;
 
     ui->stackedWidget_2->setCurrentIndex(1);
     ui->stackedWidget->setCurrentIndex(1);
@@ -117,9 +117,10 @@ void MainWindow::on_pushButton_14_clicked()
         this->database->executeQuery("UPDATE users SET balance = balance + :withdrawnValue WHERE id = :userId", params);
 
         QMessageBox::information(this, "title", QString::number(this->user->getBalance()));
-        card=nullptr;
-        user=nullptr;
-        this->database = nullptr;
+        this->card=nullptr;
+        this->user=nullptr;
+        this->database->close();
+        this->database=nullptr;
         ui->stackedWidget->setCurrentIndex(1);
         return;
     }
@@ -226,10 +227,10 @@ void MainWindow::on_pushButton_9_clicked()
 
 void MainWindow::on_pushButton_15_clicked()
 {
-    this->card = nullptr;
-    this->user = nullptr;
+    this->card=nullptr;
+    this->user=nullptr;
     this->database->close();
-    this->database = nullptr;
+    this->database=nullptr;
     ui->stackedWidget->setCurrentIndex(1);
     ui->stackedWidget_2->setCurrentIndex(2);
 }
@@ -284,8 +285,10 @@ void MainWindow::on_pushButton_23_clicked()
         ui->monthlyLimit->insert(QString::number(this->user->getMonthtlyLimit()));
         ui->dailyWithdrawn->insert(QString::number(this->user->getDailyWithdrawn()));
         ui->monthlyWithdrawn->insert(QString::number(this->user->getMonthlyWithdrawn()));
-        card=nullptr;
-        user=nullptr;
+        this->card=nullptr;
+        this->user=nullptr;
+        this->database->close();
+        this->database=nullptr;
         ui->stackedWidget_2->setCurrentIndex(0);
         ui->stackedWidget->setCurrentIndex(1);
     }

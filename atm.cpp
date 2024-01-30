@@ -53,14 +53,25 @@ map<int, int> ATM::withdrawn(User& user, double amount)
         return toWithdraw;
     }
 
+    int totalAmount = 0;\
     vector<int> denominations;
     vector<int> smallDenominations;
 
-    for (auto& pair : this->banknoteCapacity) {
+
+    for (const auto& pair : this->banknoteCapacity) {
+        int denomination = pair.first;
+        int quantity = pair.second;
+        totalAmount += denomination * quantity;
         denominations.push_back(pair.first);
         if(pair.first <= 50){
             smallDenominations.push_back(pair.first);
         }
+    }
+
+    map<int, int> tempBanknoteCapacity = this->banknoteCapacity;
+
+    if(totalAmount < amount){
+        return toWithdraw;
     }
 
     sort(denominations.rbegin(), denominations.rend());
@@ -71,10 +82,11 @@ map<int, int> ATM::withdrawn(User& user, double amount)
     double amountToWithdrawnSmaller = fmod(amount,100.00);
 
     for (int denom : denominations) {
-        int count = min((int)(amountToWithdrawnBigger / denom), this->banknoteCapacity[denom]);
+        int count = min((int)(amountToWithdrawnBigger / denom), tempBanknoteCapacity[denom]);
         if (count > 0) {
             toWithdraw[denom] = count;
             amountToWithdrawnBigger -= count * denom;
+            tempBanknoteCapacity[denom] -= count;
         }
     }
 
@@ -86,7 +98,7 @@ map<int, int> ATM::withdrawn(User& user, double amount)
 
         for(int i = startingDenom; i<smallDenominations.size(); ++i){
             int denom = smallDenominations[i];
-            int count = min((int)(tempSmallWithdrawn / denom), this->banknoteCapacity[denom]);
+            int count = min((int)(tempSmallWithdrawn / denom), tempBanknoteCapacity[denom]);
             if(count>0){
                 tempWithdrawn[denom] = count;
                 tempSmallWithdrawn-=count*denom;
