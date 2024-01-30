@@ -55,7 +55,7 @@ void MainWindow::withdrawPipeLine(double withdrawnValue){
 
     params = {{{":withdrawnValue", withdrawnValue}, {":userId", this->user->getUserID()}}};
 
-    this->database->executeQuery("UPDATE users SET balance = balance - :withdrawnValue WHERE id = :userId", params);
+    this->database->executeQuery("UPDATE users SET balance = balance - :withdrawnValue, daily_withdrawn = daily_withdrawn + :withdrawnValue, monthly_withdrawn = monthly_withdrawn + :withdrawnValue WHERE id = :userId", params);
 
     this->card=nullptr;
     this->user=nullptr;
