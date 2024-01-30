@@ -39,6 +39,7 @@ void MainWindow::withdrawPipeLine(double withdrawnValue){
     QMessageBox::information(this, "title", QString::number(this->user->getBalance()));
     if(banknotes.empty()){
         ui->stackedWidget->setCurrentIndex(1);
+        QMessageBox::warning(this, "title", "Nie można wybrać zadanej kwoty");
         return;
     }
 
@@ -51,10 +52,16 @@ void MainWindow::withdrawPipeLine(double withdrawnValue){
 
     QMap<QString, QVariant> params = {{{":amount500", QString::number(banknotes[500])}, {":amount200", QString::number(banknotes[200])}, {":amount100", QString::number(banknotes[100])}, {":amount50", QString::number(banknotes[50])}, {":amount20", QString::number(banknotes[20])}, {":amount10", QString::number(banknotes[10])}}};
 
-    QSqlQuery query = this->database->executeQuery("UPDATE atm SET amount500 = amount500 - :amount500, amount200 = amount200 - :amount200, amount100 = amount100 - :amount100, amount50 = amount50 - :amount50, amount20 = amount20 - :amount20, amount10 = amount10 - :amount10 WHERE id = 1", params);
+    this->database->executeQuery("UPDATE atm SET amount500 = amount500 - :amount500, amount200 = amount200 - :amount200, amount100 = amount100 - :amount100, amount50 = amount50 - :amount50, amount20 = amount20 - :amount20, amount10 = amount10 - :amount10 WHERE id = 1", params);
 
-    card=nullptr;
-    user=nullptr;
+    params = {{{":withdrawnValue", withdrawnValue}, {":userId", this->user->getUserID()}}};
+
+    this->database->executeQuery("UPDATE users SET balance = balance - :withdrawnValue WHERE id = :userId", params);
+
+    this->card = nullptr;
+    this->user = nullptr;
+    this->database = nullptr;
+
     ui->stackedWidget_2->setCurrentIndex(1);
     ui->stackedWidget->setCurrentIndex(1);
 }
@@ -104,9 +111,15 @@ void MainWindow::on_pushButton_14_clicked()
         QSqlQuery query = this->database->executeQuery("UPDATE atm SET amount500 = amount500 + :amount500, amount200 = amount200 + :amount200, amount100 = amount100 + :amount100, amount50 = amount50 + :amount50, amount20 = amount20 + :amount20, amount10 = amount10 + :amount10 WHERE id = 1", params);
 
         this->atm->deposit(*this->user, amountToDepo, insertBanknotes);
+
+        params = {{{":withdrawnValue", amountToDepo}, {":userId", this->user->getUserID()}}};
+
+        this->database->executeQuery("UPDATE users SET balance = balance + :withdrawnValue WHERE id = :userId", params);
+
         QMessageBox::information(this, "title", QString::number(this->user->getBalance()));
         card=nullptr;
         user=nullptr;
+        this->database = nullptr;
         ui->stackedWidget->setCurrentIndex(1);
         return;
     }
